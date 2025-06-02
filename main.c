@@ -7,12 +7,12 @@
 #define COLOR_WHITE 0xFFFFFFFF
 #define COLOR_GRAY 0xFFB0B0B0
 
-#define CELL_SIZE 20
 #define ROWS SCREEN_HEIGHT / CELL_SIZE
 #define COLS SCREEN_WIDTH / CELL_SIZE
-#define GRIDLINE_WIDTH 4
+#define GRIDLINE_WIDTH 1
 
 
+int CELL_SIZE = 20;
 
 void draw_grid(SDL_Surface *surface) {
 	
@@ -45,12 +45,27 @@ int main() {
 
 	int running = 1;
 
-	SDL_Event event;
 	
 	while(running) {
-		 while (SDL_PollEvent(&event)) {
-           		 if (event.type == SDL_EVENT_QUIT) {
+
+		SDL_Event event;
+		while (SDL_PollEvent(&event)) {
+           		if (event.type == SDL_EVENT_QUIT) {
                			 running = 0;
+			}
+
+			if (event.type == SDL_EVENT_MOUSE_WHEEL) {
+				int scrollY = event.wheel.y;
+				// zoom in
+				if(scrollY > 0 && CELL_SIZE < 100) {
+					CELL_SIZE += 20;
+				}
+				
+				// zoom out
+				else if (scrollY < 0 && CELL_SIZE > 20) {
+					CELL_SIZE -= 20;
+				}
+
 			 }
 		 }
 		
