@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_ttf.h>
 
 #define SCREEN_WIDTH 1200
 #define SCREEN_HEIGHT 800
@@ -20,7 +21,7 @@
 #define COLS SCREEN_WIDTH / CELL_SIZE
 #define GRIDLINE_WIDTH 1
 
-#define GENERATION_SPEED 10 // once each x game loop iteration
+#define GENERATION_SPEED 8 // once each 10 game loop iteration
 
 struct point {
     int row, col;
@@ -208,6 +209,8 @@ int main() {
     SDL_Window *window = SDL_CreateWindow("Conway's Game of Life", SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
 
+    SDL_FRect white_screen = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+
     init_points();
 
     int running = 1;
@@ -220,7 +223,7 @@ int main() {
     int generation_counter = 0;
 
     while(running) {
-        
+
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
 
@@ -266,9 +269,8 @@ int main() {
             
             // re-draw white bg on each update
             SDL_SetRenderDrawColor(renderer, RGBA(COLOR_WHITE));
-            SDL_RenderClear(renderer);
-            
-            
+            SDL_RenderFillRect(renderer, &white_screen);
+
 
             // draw grid
             draw_grid(renderer);
@@ -276,7 +278,6 @@ int main() {
             if (gameStarted) {
                 if (generation_counter > GENERATION_SPEED){
                     update_points();
-                    draw_points(renderer);
                     generation_counter = 0;
                 } else {
                     generation_counter++;
@@ -284,18 +285,18 @@ int main() {
             }
 
             draw_points(renderer);
+            SDL_RenderPresent(renderer);
         }
-        
-        SDL_RenderPresent(renderer);
-        SDL_Delay(10);
-        
+
+
+        SDL_Delay(20);
     }
-            SDL_DestroyRenderer(renderer);
-            SDL_DestroyWindow(window);
-            SDL_Quit();
-    
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
 
     return 0;
 }
-
 
