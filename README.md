@@ -13,7 +13,7 @@ Esc: pause / resume
 E: stop simulation
 
 ## Demo
-<img src="demo.gif" width = 300>
+<img src="src/demo.gif" width = 300>
 
 
 
